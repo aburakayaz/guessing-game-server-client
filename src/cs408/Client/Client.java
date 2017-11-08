@@ -1,5 +1,7 @@
 package cs408.Client;
 
+import cs408.Common.Commands.SendUserList;
+import cs408.Common.Commands.SetUsername;
 import cs408.Common.ConnectionHandler;
 import cs408.Common.MessageHandler;
 
@@ -48,7 +50,7 @@ public class Client extends Thread {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             messageHandler.showMessage("Client has connected to the server.");
             messageHandler.showMessage("Sending username information to the server.");
-            sendMessage("/setUserName " + username);
+            sendMessage(SetUsername.NAME + " " + username);
             connectionLoop();
         } catch(ConnectException e) {
             messageHandler.showMessage("Connection was refused.");
@@ -66,7 +68,7 @@ public class Client extends Thread {
      */
     public void requestUserList() {
         messageHandler.showMessage("Requesting player list from the server.");
-        sendMessage("/sendList");
+        sendMessage(SendUserList.NAME);
     }
 
     /**
