@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import java.lang.String?>
 <GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cs408.Client.Controller">
     <columnConstraints>
         <ColumnConstraints />
@@ -20,9 +21,9 @@
         <AnchorPane prefHeight="500.0" prefWidth="550.0">
          <children>
             <Label layoutX="14.0" layoutY="25.0" text="IP Adress:" />
-            <TextField fx:id="ipAdress" layoutX="89.0" layoutY="20.0" prefHeight="31.0" prefWidth="102.0" />
+            <TextField fx:id="ipAdress" layoutX="89.0" layoutY="20.0" prefHeight="31.0" prefWidth="102.0" ><String fx:value="localhost" /></TextField>
             <Label layoutX="200.0" layoutY="25.0" text="Port:" />
-            <TextField fx:id="port" layoutX="240.0" layoutY="20.0" prefHeight="31.0" prefWidth="65.0" />
+            <TextField fx:id="port" layoutX="240.0" layoutY="20.0" prefHeight="31.0" prefWidth="65.0" ><String fx:value="122" /></TextField>
             <Button fx:id="connect" layoutX="19.0" layoutY="69.0" mnemonicParsing="false" onAction="#connectServer" prefHeight="31.0" prefWidth="140.0" text="Connect" />
             <Button fx:id="listUsers" disable="true" layoutX="174.0" layoutY="69.0" mnemonicParsing="false" onAction="#listUsers" text="List Users" />
              <TextArea fx:id="console" editable="false" layoutX="13.0" layoutY="181.0" prefHeight="305.0" prefWidth="526.0" />
