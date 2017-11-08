@@ -11,7 +11,7 @@ public class GUIConnectionHandler implements ConnectionHandler {
      * This class implements the ConnectionHandler interface.
      */
 
-    public GUIConnectionHandler(Button listen) {
+    GUIConnectionHandler(Button listen) {
         this.listen = listen;
     }
 
