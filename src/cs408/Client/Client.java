@@ -52,13 +52,13 @@ public class Client extends Thread {
             messageHandler.showMessage("Sending username information to the server.");
             sendMessage(SetUsername.NAME + " " + username);
             connectionLoop();
-        } catch(ConnectException e) {
+        } catch (ConnectException e) {
             messageHandler.showMessage("Connection was refused.");
             connected = false;
-        } catch(UnknownHostException e) {
+        } catch (UnknownHostException e) {
             messageHandler.showMessage("Unknown host. Could not connect.");
             connected = false;
-        } catch(IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -102,16 +102,17 @@ public class Client extends Thread {
             e.printStackTrace();
         }
     }
+
     /**
      * While connected to the server, client will listen for incoming messages and print them. In case of any exception
      * the connection will be lost and it will call the loseConnection function.
      */
-    private void connectionLoop(){
+    private void connectionLoop() {
         try {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 messageHandler.showMessage("Received message from the server: " + inputLine);
-                if(inputLine.indexOf("/kick") == 0) {
+                if (inputLine.indexOf("/kick") == 0) {
                     messageHandler.showMessage(inputLine.substring(6, inputLine.length()));
                 }
             }

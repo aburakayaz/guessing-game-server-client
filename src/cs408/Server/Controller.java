@@ -1,10 +1,10 @@
 package cs408.Server;
 
+import cs408.Common.GUIMessageHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import cs408.Common.GUIMessageHandler;
 
 import java.io.IOException;
 
@@ -26,12 +26,12 @@ public class Controller {
      * given IP and port.
      */
     public void listenPort() {
-        if(server != null && !server.isTerminated()) {
+        if (server != null && !server.isTerminated()) {
             terminateServer();
             return;
         }
 
-        if(port.getText().equals("") || port.getText() == null) {
+        if (port.getText().equals("") || port.getText() == null) {
             console.appendText("Please enter a port number. \n");
             return;
         }

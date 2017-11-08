@@ -1,10 +1,10 @@
 package cs408.Client;
 
+import cs408.Common.GUIMessageHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import cs408.Common.GUIMessageHandler;
 
 import java.io.IOException;
 
@@ -36,7 +36,7 @@ public class Controller {
      * When List Users button pressed, client will request the user list from the server, if it is initialized.
      */
     public void listUsers() {
-        if(client != null && client.isConnected()) {
+        if (client != null && client.isConnected()) {
             client.requestUserList();
             return;
         }
@@ -47,7 +47,7 @@ public class Controller {
      * given IP and port.
      */
     public void connectServer() {
-        if(client != null && client.isConnected()) {
+        if (client != null && client.isConnected()) {
             try {
                 client.close();
             } catch (IOException e) {
@@ -57,16 +57,16 @@ public class Controller {
             return;
         }
 
-        if(ipAdress.getText().equals("") || ipAdress.getText() == null) {
+        if (ipAdress.getText().equals("") || ipAdress.getText() == null) {
             console.appendText("Please enter an IP adress. \n");
             return;
         }
 
-        if(port.getText().equals("") || port.getText() == null) {
+        if (port.getText().equals("") || port.getText() == null) {
             console.appendText("Please enter a port number. \n");
             return;
         }
-        if(userName.getText().equals("") || userName.getText() == null) {
+        if (userName.getText().equals("") || userName.getText() == null) {
             console.appendText("Please enter an username. \n");
         }
 

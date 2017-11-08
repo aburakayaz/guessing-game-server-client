@@ -22,8 +22,7 @@ public class Client {
         return username;
     }
 
-    public boolean hasUsername()
-    {
+    public boolean hasUsername() {
         return !username.equals("");
     }
 

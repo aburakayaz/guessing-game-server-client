@@ -38,7 +38,7 @@ public class SendUserList extends CommandAbstract {
             message.append("\n");
             message.append(clientHandler.getServer().getClientHandlers().get(i).getClient().getId());
             message.append(": ");
-            message.append( clientHandler.getServer().getClientHandlers().get(i).getClient().getRefName());
+            message.append(clientHandler.getServer().getClientHandlers().get(i).getClient().getRefName());
         }
 
         clientHandler.getServer().setUserList(message.toString());
