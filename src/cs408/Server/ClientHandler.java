@@ -1,28 +1,25 @@
 package cs408.Server;
 
-import cs408.Common.MessageHandler;
-
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 
-public class ClientHandler extends Thread{
+public class ClientHandler extends Thread {
+    private Server server;
     private Socket socket;
     private PrintWriter out;
     private BufferedReader in;
-    private MessageHandler messageHandler;
-    private ArrayList<ClientHandler> clientHandlers;
-    private int id;
-    private String username;
+    private Client client;
+    private CommandHandler commandHandler;
 
     /**
      * Since we want multiple users to enter the server, for each client, this Class is created as a thread.
      */
-    public ClientHandler(Socket socket, MessageHandler messageHandler, ArrayList<ClientHandler> clientHandlers, int id) {
+    ClientHandler(Socket socket, Server server) {
         this.socket = socket;
-        this.messageHandler = messageHandler;
-        this.clientHandlers = clientHandlers;
-        this.id = id;
+        this.server = server;
+
+        client = new Client(server.getIdCounter());
+        commandHandler = new CommandHandler(this);
     }
 
     /**
@@ -33,12 +30,16 @@ public class ClientHandler extends Thread{
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            messageHandler.showMessage("Client " + getRefName()  + " has connected to the server.");
+            server.getMessageHandler().showMessage(getClientConnectedMessage());
 
             connectionLoop();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private String getClientConnectedMessage() {
+        return "Client " + client.getRefName() + " has connected to the server.";
     }
 
     /**
@@ -50,31 +51,28 @@ public class ClientHandler extends Thread{
             socket.close();
             in.close();
             out.close();
-            messageHandler.showMessage("Client " + getRefName()  + " has been disconnected.");
+            server.getMessageHandler().showMessage(getClientDisconnectedMessage());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    private String getClientDisconnectedMessage() {
+        return "Client " + client.getRefName() + " has been disconnected.";
+    }
+
     /**
      * To send a message to client.
      */
     public void sendMessage(String message) {
-        messageHandler.showMessage("Sending message to the client "+ getRefName() +": " + message);
+        server.getMessageHandler().showMessage(getSendingToClientMessage(message));
         out.println(message);
         out.flush();
     }
 
-    /**
-     * If the user has an username (which they don't have at the very first step of their connection) this function will return the id
-     * instead of username.
-     */
-    private String getRefName() {
-        if(username == null) {
-            return String.valueOf(id);
-        }
-        return username;
+    private String getSendingToClientMessage(String message) {
+        return "Sending message to the client " + client.getRefName() + ": " + message;
     }
 
     /**
@@ -85,52 +83,48 @@ public class ClientHandler extends Thread{
      * After each of these steps, the client is informed.
      * In case of connection end, the closeSocket function is called.
      */
-    private void connectionLoop(){
+    private void connectionLoop() {
         try {
-            String inputLine;
-            while ((inputLine = in.readLine()) != null && !isInterrupted()) {
-                messageHandler.showMessage("Received message from the client " + getRefName() + ": " + inputLine);
-                /*
-                TODO: Refactor
-                 */
-                if("/sendList".equals(inputLine)) {
-                    messageHandler.showMessage("Client " + getRefName() + " wants the current player list. Sending...");
-                    sendMessage("User List:");
-                    for(int i = 0; i < clientHandlers.size(); i++) {
-                        sendMessage(clientHandlers.get(i).id + ": " + clientHandlers.get(i).getRefName());
-                    }
-                } else if(inputLine.split(" ")[0].equals("/setUserName")) {
-                    messageHandler.showMessage("Client " + getRefName() + " wants to set its username. Setting...");
-                    String sentUserName = inputLine.split(" ")[1];
-                    boolean rejected = false;
-                    for(int i = 0; i < clientHandlers.size(); i++) {
-                        if(sentUserName.equals(clientHandlers.get(i).username)) {
-                            rejected = true;
-                            break;
-                        }
-                    }
-                    if(rejected) {
-                        messageHandler.showMessage("Client " + getRefName() + " wanted to select a nickname that is already taken. Kicking the client...");
-                        sendMessage("/kick Username is already taken.");
-                        clientHandlers.remove(this);
-                        closeSocket();
-                       continue;
-                    }
-                    if(username == null) {
-                        username = sentUserName;
-                    }
-                    messageHandler.showMessage("Setted client " + id + " nickname to: " + username);
-                }
-            }
-
+            handleIncomingMessages();
         } catch (IOException e) {
             //
         } finally {
-            if(!socket.isClosed()) {
-                clientHandlers.remove(this);
-                closeSocket();
-            }
+            terminateConnection();
+        }
+    }
+
+    private void handleIncomingMessages() throws IOException {
+        String inputLine;
+        while ((inputLine = in.readLine()) != null && !isInterrupted()) {
+            displayReceivedMessage(inputLine);
+
+            commandHandler.handle(inputLine);
+        }
+    }
+
+    private void displayReceivedMessage(String message) {
+        server.getMessageHandler().showMessage(getReceivedFromClientMessage(message));
+    }
+
+    private String getReceivedFromClientMessage(String message) {
+        return "Received message from the client " + client.getRefName() + ": " + message;
+    }
+
+    private void terminateConnection() {
+        if (socket.isClosed()) {
+            return;
         }
 
+        server.resetUserList();
+        server.getClientHandlers().remove(this);
+        closeSocket();
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public Client getClient() {
+        return client;
     }
 }
