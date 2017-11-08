@@ -8,8 +8,11 @@ import cs408.Common.GUIMessageHandler;
 
 import java.io.IOException;
 
+/**
+ * This class is the bridge between GUI and Server Thread
+ */
 public class Controller {
-    Server server;
+    private Server server;
 
     @FXML
     private TextField port;
@@ -19,21 +22,12 @@ public class Controller {
     private Button listen;
 
     /**
-     * This class is the bridge between GUI and Server Thread
-     */
-
-    /**
      * When Listen/Terminate button is pressed and if all the fields are completed, a new Server will be created to connect to the
      * given IP and port.
      */
     public void listenPort() {
-
         if(server != null && !server.isTerminated()) {
-            try {
-                server.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            terminateServer();
             return;
         }
 
@@ -46,6 +40,14 @@ public class Controller {
 
         server = new Server(portNumber, new GUIMessageHandler(console), new GUIConnectionHandler(listen));
         server.start();
+    }
+
+    private void terminateServer() {
+        try {
+            server.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
