@@ -1,12 +1,10 @@
 package cs408.Client;
 
-import cs408.Common.Commands.Invite;
-import cs408.Common.Commands.ProcessUserList;
-import cs408.Common.Commands.SendUserList;
-import cs408.Common.Commands.SetUsername;
-import cs408.Common.ConnectionHandler;
+import cs408.Client.Commands.CommandHandler;
+import cs408.Server.Commands.Invite;
+import cs408.Server.Commands.SendUserList;
+import cs408.Server.Commands.SetUsername;
 import cs408.Common.MessageHandler;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -23,6 +21,7 @@ public class Client extends Thread {
     private Socket socket;
     private String ip;
     private int port;
+    private CommandHandler commandHandler;
     private MessageHandler messageHandler;
     private GUIHandler guiHandler;
     private PrintWriter out;
@@ -41,8 +40,8 @@ public class Client extends Thread {
         this.port = port;
         this.username = username;
 
+        commandHandler = new CommandHandler(this);
         onlineUsers = FXCollections.observableArrayList();
-
     }
 
     /**
@@ -129,20 +128,8 @@ public class Client extends Thread {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 messageHandler.showMessage("[SERVER]: " + inputLine);
-                if(inputLine.indexOf("User List:") == 0) {
-                    guiHandler.removeUsers();
-                }
-                else if(inputLine.indexOf(ProcessUserList.NAME) == 0) {
-                    String[] userInfo = inputLine.split(" : ");
-                    guiHandler.addUser(userInfo[1] + " - " + userInfo[2]);
-                }
-                else if(inputLine.indexOf("/invites") == 0) {
-                    String[] userInfo = inputLine.split(" ");
-                    guiHandler.showGameInvitation(userInfo[2]);
-                }
-                else if (inputLine.indexOf("/kick") == 0) {
-                    messageHandler.showMessage(inputLine.substring(6, inputLine.length()));
-                }
+
+                commandHandler.handle(inputLine);
             }
             loseConnection();
         } catch (SocketException e2) {
@@ -158,5 +145,9 @@ public class Client extends Thread {
 
     public GUIHandler getGuiHandler() {
         return guiHandler;
+    }
+
+    public MessageHandler getMessageHandler() {
+        return messageHandler;
     }
 }

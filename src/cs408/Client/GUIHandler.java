@@ -1,33 +1,25 @@
 package cs408.Client;
 
-import cs408.Common.Commands.Accept;
-import cs408.Common.Commands.Decline;
-import cs408.Common.ConnectionHandler;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListView;
-
-import java.util.Optional;
+import javafx.scene.control.*;
 
 public class GUIHandler {
     private Button connect;
     private Button listUsers;
     private ListView onlineList;
-    private Client client;
     private ObservableList<String> onlineUsers;
+    private Alert game;
 
-    public GUIHandler(Button connect, Button listUsers, ListView onlineList) {
+    GUIHandler(Button connect, Button listUsers, ListView onlineList) {
         this.connect = connect;
         this.listUsers = listUsers;
         this.onlineList = onlineList;
         this.onlineUsers = FXCollections.observableArrayList();
     }
 
-    public void changeConnectionState(boolean connected) {
+    void changeConnectionState(boolean connected) {
         Platform.runLater(() -> {
             if (connected) {
                 connect.setText("Disconnect");
@@ -52,24 +44,15 @@ public class GUIHandler {
         });
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void closeGame() {
+        Platform.runLater(() -> game.close());
     }
 
-    public void showGameInvitation(String username) {
-        Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Game Invitation");
-            alert.setHeaderText(username + " challenges you to a game!");
-            alert.setContentText("You can accept and face your fate or you may escape from it");
-
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.get() == ButtonType.OK) {
-                client.sendMessage(Accept.NAME);
-            } else {
-                client.sendMessage(Decline.NAME);
-            }
-        });
+    public Alert getGame() {
+        return game;
     }
 
+    public void setGame(Alert game) {
+        this.game = game;
+    }
 }
