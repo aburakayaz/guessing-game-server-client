@@ -18,6 +18,5 @@ public class GUIMessageHandler implements MessageHandler {
         Platform.runLater(() -> {
             console.appendText(message + "\n");
         });
-
     }
 }
