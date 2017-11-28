@@ -1,9 +1,14 @@
 package cs408.Client;
 
+import cs408.Common.Commands.Invite;
+import cs408.Common.Commands.ProcessUserList;
 import cs408.Common.Commands.SendUserList;
 import cs408.Common.Commands.SetUsername;
 import cs408.Common.ConnectionHandler;
 import cs408.Common.MessageHandler;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,21 +24,25 @@ public class Client extends Thread {
     private String ip;
     private int port;
     private MessageHandler messageHandler;
-    private ConnectionHandler connectionHandler;
+    private GUIHandler guiHandler;
     private PrintWriter out;
     private BufferedReader in;
     private boolean connected = true;
     private String username;
+    private ObservableList<String> onlineUsers;
 
     /**
      * This class is the client thread, in which the application will listen the server for incoming messages and sending messages.
      */
-    public Client(String ip, int port, MessageHandler messageHandler, ConnectionHandler connectionHandler, String username) {
+    public Client(String ip, int port, MessageHandler messageHandler, GUIHandler guiHandler, String username) {
         this.messageHandler = messageHandler;
-        this.connectionHandler = connectionHandler;
+        this.guiHandler = guiHandler;
         this.ip = ip;
         this.port = port;
         this.username = username;
+
+        onlineUsers = FXCollections.observableArrayList();
+
     }
 
     /**
@@ -45,7 +54,7 @@ public class Client extends Thread {
     public void run() {
         try {
             socket = new Socket(ip, port);
-            connectionHandler.changeState(true);
+            guiHandler.changeConnectionState(true);
             out = new PrintWriter(socket.getOutputStream());
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             messageHandler.showMessage("Client has connected to the server.");
@@ -69,6 +78,14 @@ public class Client extends Thread {
     public void requestUserList() {
         messageHandler.showMessage("Requesting player list from the server.");
         sendMessage(SendUserList.NAME);
+    }
+
+    /**
+     * Sends server a /invite command to invite a user to a game.
+     */
+    public void inviteUser(int id) {
+        messageHandler.showMessage("Inviting " + id + " to a game, sending message to the server.");
+        sendMessage(Invite.NAME + " " + id);
     }
 
     /**
@@ -97,7 +114,7 @@ public class Client extends Thread {
             out.close();
             messageHandler.showMessage("Disconnected from the server.");
             connected = false;
-            connectionHandler.changeState(false);
+            guiHandler.changeConnectionState(false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -111,8 +128,19 @@ public class Client extends Thread {
         try {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
-                messageHandler.showMessage("Received message from the server: " + inputLine);
-                if (inputLine.indexOf("/kick") == 0) {
+                messageHandler.showMessage("[SERVER]: " + inputLine);
+                if(inputLine.indexOf("User List:") == 0) {
+                    guiHandler.removeUsers();
+                }
+                else if(inputLine.indexOf(ProcessUserList.NAME) == 0) {
+                    String[] userInfo = inputLine.split(" : ");
+                    guiHandler.addUser(userInfo[1] + " - " + userInfo[2]);
+                }
+                else if(inputLine.indexOf("/invites") == 0) {
+                    String[] userInfo = inputLine.split(" ");
+                    guiHandler.showGameInvitation(userInfo[2]);
+                }
+                else if (inputLine.indexOf("/kick") == 0) {
                     messageHandler.showMessage(inputLine.substring(6, inputLine.length()));
                 }
             }
@@ -126,5 +154,9 @@ public class Client extends Thread {
 
     public boolean isConnected() {
         return connected;
+    }
+
+    public GUIHandler getGuiHandler() {
+        return guiHandler;
     }
 }

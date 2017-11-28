@@ -1,8 +1,11 @@
 package cs408.Client;
 
 import cs408.Common.GUIMessageHandler;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -10,6 +13,7 @@ import java.io.IOException;
 
 public class Controller {
     Client client;
+    String currentSelectedUser;
 
     @FXML
     private TextField port;
@@ -23,13 +27,20 @@ public class Controller {
     private Button listUsers;
     @FXML
     private TextArea console;
+    @FXML
+    private ListView onlineList;
 
     /**
      * This class is the bridge between GUI and Client Thread
      */
+    public Controller() {
 
-    public void changeButtonStates(boolean connected) {
+    }
 
+    public void inviteUser() {
+        if(currentSelectedUser != null) {
+            client.inviteUser(Integer.parseInt(currentSelectedUser.split(" - ")[0]));
+        }
     }
 
     /**
@@ -68,11 +79,20 @@ public class Controller {
         }
         if (userName.getText().equals("") || userName.getText() == null) {
             console.appendText("Please enter an username. \n");
+            return;
         }
 
         int portNumber = Integer.parseInt(port.getText());
 
-        client = new Client(ipAdress.getText(), portNumber, new GUIMessageHandler(console), new GUIConnectionHandler(connect, listUsers), userName.getText());
+        client = new Client(ipAdress.getText(), portNumber, new GUIMessageHandler(console), new GUIHandler(connect, listUsers, onlineList), userName.getText());
         client.start();
+        client.getGuiHandler().setClient(client);
+
+        onlineList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                currentSelectedUser = newValue;
+            }
+        });
     }
 }

@@ -14,6 +14,8 @@ public class ClientHandler extends Thread {
     private Client client;
     private CommandHandler commandHandler;
 
+    private boolean isAvailable = true;
+
     /**
      * Since we want multiple users to enter the server, for each client, this Class is created as a thread.
      */
@@ -129,5 +131,13 @@ public class ClientHandler extends Thread {
 
     public Client getClient() {
         return client;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 }

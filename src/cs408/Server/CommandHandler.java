@@ -12,6 +12,9 @@ class CommandHandler {
         commands = new Commands();
         commands.add(new SendUserList(clientHandler));
         commands.add(new SetUsername(clientHandler));
+        commands.add(new Invite(clientHandler));
+        commands.add(new Accept(clientHandler));
+        commands.add(new Decline(clientHandler));
     }
 
     void handle(String message) {
@@ -27,6 +30,8 @@ class CommandHandler {
         if (command instanceof UsesMessage) {
             ((UsesMessage) command).useMessage(message);
         }
+
+        command.setFullInput(message);
 
         command.act();
     }

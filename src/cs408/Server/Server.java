@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 public class Server extends Thread {
 
@@ -16,6 +17,7 @@ public class Server extends Thread {
     private String userList;
     private int port;
     private ClientHandlers clientHandlers;
+    private GameSessions gameSessions;
     private boolean isTerminated;
     private int idCounter;
 
@@ -28,7 +30,7 @@ public class Server extends Thread {
         this.connectionHandler = connectionHandler;
 
         clientHandlers = new ClientHandlers();
-
+        gameSessions = new GameSessions();
         userList = "";
         idCounter = 0;
         isTerminated = false;
@@ -67,7 +69,7 @@ public class Server extends Thread {
         }
     }
 
-    private void showMessage(String message) {
+    public void showMessage(String message) {
         messageHandler.showMessage(message);
     }
 
@@ -114,6 +116,10 @@ public class Server extends Thread {
 
     void resetUserList() {
         userList = "";
+    }
+
+    public GameSessions getGameSessions() {
+        return gameSessions;
     }
 
     public boolean isUserListUpToDate() {

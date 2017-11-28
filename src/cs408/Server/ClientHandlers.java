@@ -8,4 +8,13 @@ public class ClientHandlers extends ArrayList<ClientHandler> {
                 clientHandler -> clientHandler.getClient().getUsername().equals(username)
         );
     }
+
+    public ClientHandler getByID(int id) {
+        for(int i = 0; i < size(); i++) {
+            if(get(i).getClient().getId() == id) {
+                return get(i);
+            }
+        }
+        return null;
+    }
 }

@@ -17,9 +17,9 @@ public class SetUsername extends CommandAbstract implements UsesMessage {
 
     @Override
     public void act() {
-        clientHandler.getServer().getMessageHandler().showMessage(getServerFirstInfoMessage());
+        server.getMessageHandler().showMessage(getServerFirstInfoMessage());
 
-        if (clientHandler.getServer().getClientHandlers().hasUsername(username)) {
+        if (server.getClientHandlers().hasUsername(username)) {
             kickClient();
             return;
         }
@@ -37,13 +37,13 @@ public class SetUsername extends CommandAbstract implements UsesMessage {
             clientHandler.getClient().setUsername(username);
         }
 
-        clientHandler.getServer().getMessageHandler().showMessage(getServerSuccessMessage());
+        server.getMessageHandler().showMessage(getServerSuccessMessage());
     }
 
     private void kickClient() {
-        clientHandler.getServer().getMessageHandler().showMessage(getServerActionInfoMessage());
+        server.getMessageHandler().showMessage(getServerActionInfoMessage());
         clientHandler.sendMessage("/kick Username is already taken.");
-        clientHandler.getServer().getClientHandlers().remove(clientHandler);
+        server.getClientHandlers().remove(clientHandler);
         clientHandler.closeSocket();
     }
 

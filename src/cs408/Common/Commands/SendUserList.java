@@ -16,7 +16,7 @@ public class SendUserList extends CommandAbstract {
 
     @Override
     public void act() {
-        clientHandler.getServer().getMessageHandler().showMessage(getServerMessage());
+        server.getMessageHandler().showMessage(getServerMessage());
 
         clientHandler.sendMessage(getClientMessage());
     }
@@ -28,20 +28,22 @@ public class SendUserList extends CommandAbstract {
     }
 
     private String getClientMessage() {
-        if (clientHandler.getServer().isUserListUpToDate()) {
-            return clientHandler.getServer().getUserList();
+        if (server.isUserListUpToDate()) {
+            return server.getUserList();
         }
 
         StringBuilder message = new StringBuilder("User List:");
 
-        for (int i = 0; i < clientHandler.getServer().getClientHandlers().size(); i++) {
+        for (int i = 0; i < server.getClientHandlers().size(); i++) {
             message.append("\n");
-            message.append(clientHandler.getServer().getClientHandlers().get(i).getClient().getId());
-            message.append(": ");
-            message.append(clientHandler.getServer().getClientHandlers().get(i).getClient().getRefName());
+            message.append(ProcessUserList.NAME);
+            message.append(" User : ");
+            message.append(server.getClientHandlers().get(i).getClient().getId());
+            message.append(" : ");
+            message.append(server.getClientHandlers().get(i).getClient().getRefName());
         }
 
-        clientHandler.getServer().setUserList(message.toString());
+        server.setUserList(message.toString());
 
         return message.toString();
     }
