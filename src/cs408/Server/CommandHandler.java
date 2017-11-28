@@ -1,38 +1,30 @@
 package cs408.Server;
 
+import cs408.Common.Commands.CommandHandlerAbstract;
 import cs408.Common.Commands.*;
+import cs408.Server.Commands.*;
 
-class CommandHandler {
-    private Commands commands;
+class CommandHandler extends CommandHandlerAbstract {
     private ClientHandler clientHandler;
 
     CommandHandler(ClientHandler clientHandler) {
         this.clientHandler = clientHandler;
+        addCommands();
+    }
 
-        commands = new Commands();
+    @Override
+    protected void addCommands() {
         commands.add(new SendUserList(clientHandler));
         commands.add(new SetUsername(clientHandler));
         commands.add(new Invite(clientHandler));
         commands.add(new Accept(clientHandler));
         commands.add(new Decline(clientHandler));
+        commands.add(new Surrender(clientHandler));
     }
 
-    void handle(String message) {
-        String commandString = message.split(" ")[0];
-        Command command = commands.find(commandString);
-
-        if (command == null) {
-            clientHandler.getServer().getMessageHandler()
-                    .showMessage("Client is sending an unknown command: " + commandString);
-            return;
-        }
-
-        if (command instanceof UsesMessage) {
-            ((UsesMessage) command).useMessage(message);
-        }
-
-        command.setFullInput(message);
-
-        command.act();
+    @Override
+    protected void unknownCommand(String command) {
+        clientHandler.getServer().getMessageHandler()
+                .showMessage("Client is sending an unknown command: " + command);
     }
 }
