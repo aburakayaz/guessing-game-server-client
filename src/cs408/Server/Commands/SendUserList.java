@@ -1,5 +1,7 @@
-package cs408.Common.Commands;
+package cs408.Server.Commands;
 
+import cs408.Client.Commands.ProcessUserList;
+import cs408.Client.Commands.ReceiveUserList;
 import cs408.Server.ClientHandler;
 
 public class SendUserList extends CommandAbstract {
@@ -32,7 +34,7 @@ public class SendUserList extends CommandAbstract {
             return server.getUserList();
         }
 
-        StringBuilder message = new StringBuilder("User List:");
+        StringBuilder message = new StringBuilder(ReceiveUserList.NAME + " User List:");
 
         for (int i = 0; i < server.getClientHandlers().size(); i++) {
             message.append("\n");

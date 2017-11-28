@@ -1,5 +1,7 @@
-package cs408.Common.Commands;
+package cs408.Server.Commands;
 
+import cs408.Client.Commands.Kick;
+import cs408.Common.Commands.UsesMessage;
 import cs408.Server.ClientHandler;
 
 public class SetUsername extends CommandAbstract implements UsesMessage {
@@ -42,7 +44,7 @@ public class SetUsername extends CommandAbstract implements UsesMessage {
 
     private void kickClient() {
         server.getMessageHandler().showMessage(getServerActionInfoMessage());
-        clientHandler.sendMessage("/kick Username is already taken.");
+        clientHandler.sendMessage(Kick.NAME + " Username is already taken.");
         server.getClientHandlers().remove(clientHandler);
         clientHandler.closeSocket();
     }

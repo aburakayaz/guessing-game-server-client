@@ -1,10 +1,10 @@
-package cs408.Common.Commands;
+package cs408.Server.Commands;
 
 import cs408.Server.ClientHandler;
 import cs408.Server.GameSession;
 
 public class Accept extends CommandAbstract{
-    public static final String NAME = "/accept";
+    public static final String NAME = "/Accept";
 
     public Accept(ClientHandler clientHandler) {
         super(clientHandler);

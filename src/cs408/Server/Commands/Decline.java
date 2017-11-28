@@ -1,10 +1,10 @@
-package cs408.Common.Commands;
+package cs408.Server.Commands;
 
 import cs408.Server.ClientHandler;
 import cs408.Server.GameSession;
 
 public class Decline extends CommandAbstract{
-    public static final String NAME = "/decline";
+    public static final String NAME = "/Decline";
 
     public Decline(ClientHandler clientHandler) {
         super(clientHandler);
