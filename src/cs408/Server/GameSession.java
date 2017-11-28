@@ -43,7 +43,7 @@ public class GameSession {
         endSession();
     }
 
-    private void endSession() {
+    public void endSession() {
         host.setAvailable(true);
         invited.setAvailable(true);
         host.getServer().getGameSessions().remove(this);
