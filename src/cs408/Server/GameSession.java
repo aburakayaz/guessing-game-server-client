@@ -1,16 +1,19 @@
 package cs408.Server;
 
+import cs408.Client.Commands.Lose;
+import cs408.Client.Commands.StartGame;
+import cs408.Client.Commands.Win;
+
 public class GameSession {
-    private ClientHandler host, invited;
+    private ClientHandler host, invited, loser, winner;
     private boolean inviteAccepted;
-    private int winner;
 
     public GameSession(ClientHandler host, ClientHandler invited) {
         this.host = host;
         this.invited = invited;
 
-        this.host.setAvailable(false);
-        this.invited.setAvailable(false);
+        this.host.setSession(this);
+        this.invited.setSession(this);
     }
 
     public boolean isInviteAccepted() {
@@ -28,9 +31,11 @@ public class GameSession {
 
     private void informUsersPositive() {
         host.sendMessage(invited.getClient().getRefName() + " has accepted your game invite!");
-        host.sendMessage("The game is starting");
-        invited.sendMessage("The game is starting");
-        //start the game somehow
+        host.sendMessage("The game is starting...");
+        invited.sendMessage("The game is starting...");
+
+        host.sendMessage(StartGame.NAME + ' ' + invited.getClient().getRefName());
+        invited.sendMessage(StartGame.NAME + ' ' + host.getClient().getRefName());
     }
 
     private void informUsersNegative() {
@@ -38,32 +43,38 @@ public class GameSession {
         endSession();
     }
 
-    private void gameOver() {
-        //send winner and loser who has won or lost
+    public void gameOver() {
+        winner.sendMessage(Win.NAME);
+        loser.sendMessage(Lose.NAME);
         endSession();
     }
 
-    public void endSession() {
-        host.setAvailable(true);
-        invited.setAvailable(true);
+    void endSession() {
+        host.setSession(null);
+        invited.setSession(null);
         host.getServer().getGameSessions().remove(this);
     }
 
-    public int getWinner() {
-        return winner;
+    public void setLoser(ClientHandler loser) {
+        this.loser = loser;
+
+        if (loser == host) {
+            setWinner(invited);
+            return;
+        }
+
+        setWinner(host);
     }
 
-    public void setWinner(int winner) {
+    private void setWinner(ClientHandler winner) {
         this.winner = winner;
-        gameOver();
     }
 
-    public ClientHandler getHost() {
+    ClientHandler getHost() {
         return host;
     }
 
-    public ClientHandler getInvited() {
+    ClientHandler getInvited() {
         return invited;
     }
-
 }
