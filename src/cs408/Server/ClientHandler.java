@@ -13,8 +13,7 @@ public class ClientHandler extends Thread {
     private BufferedReader in;
     private Client client;
     private CommandHandler commandHandler;
-
-    private boolean isAvailable = true;
+    private GameSession session;
 
     /**
      * Since we want multiple users to enter the server, for each client, this Class is created as a thread.
@@ -25,6 +24,7 @@ public class ClientHandler extends Thread {
 
         client = new Client(server.getIdCounter());
         commandHandler = new CommandHandler(this);
+        session = null;
     }
 
     /**
@@ -141,10 +141,14 @@ public class ClientHandler extends Thread {
     }
 
     public boolean isAvailable() {
-        return isAvailable;
+        return session == null;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public GameSession getSession() {
+        return session;
+    }
+
+    void setSession(GameSession session) {
+        this.session = session;
     }
 }
