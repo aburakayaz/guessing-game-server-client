@@ -8,21 +8,23 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cs408.Server.Controller">
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="cs408.Server.Controller">
     <columnConstraints>
-        <ColumnConstraints />
+        <ColumnConstraints/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints />
+        <RowConstraints/>
     </rowConstraints>
     <children>
         <AnchorPane prefHeight="500.0" prefWidth="500.0">
             <children>
-                <Label layoutX="11.0" layoutY="26.0" text="Port to listen:" />
+                <Label layoutX="11.0" layoutY="26.0" text="Port to listen:"/>
                 <TextField fx:id="port" layoutX="108.0" layoutY="21.0" text="122"/>
-                <Button fx:id="listen" layoutX="303.0" layoutY="21.0" mnemonicParsing="false" onAction="#listenPort" prefHeight="31.0" prefWidth="187.0" text="Listen" />
-                <TextArea fx:id="console" editable="false" layoutX="13.0" layoutY="181.0" prefHeight="305.0" prefWidth="475.0" />
+                <Button fx:id="listen" layoutX="303.0" layoutY="21.0" mnemonicParsing="false" onAction="#listenPort"
+                        prefHeight="31.0" prefWidth="187.0" text="Listen"/>
+                <TextArea fx:id="console" editable="false" layoutX="13.0" layoutY="181.0" prefHeight="305.0"
+                          prefWidth="475.0"/>
             </children>
         </AnchorPane>
     </children>

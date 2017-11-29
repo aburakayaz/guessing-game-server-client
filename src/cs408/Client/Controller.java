@@ -86,7 +86,7 @@ public class Controller {
 		int portNumber = Integer.parseInt(port.getText());
 
 		client = new Client(ipAdress.getText(), portNumber, new GUIMessageHandler(console), new GUIHandler(connect,
-                listUsers, onlineList), userName.getText());
+				listUsers, onlineList), userName.getText());
 		client.start();
 
 		onlineList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {

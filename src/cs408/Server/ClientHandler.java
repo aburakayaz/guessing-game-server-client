@@ -7,148 +7,148 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 public class ClientHandler extends Thread {
-    private Server server;
-    private Socket socket;
-    private PrintWriter out;
-    private BufferedReader in;
-    private Client client;
-    private CommandHandler commandHandler;
-    private GameSession session;
+	private Server server;
+	private Socket socket;
+	private PrintWriter out;
+	private BufferedReader in;
+	private Client client;
+	private CommandHandler commandHandler;
+	private GameSession session;
 
-    /**
-     * Since we want multiple users to enter the server, for each client, this Class is created as a thread.
-     */
-    ClientHandler(Socket socket, Server server) {
-        this.socket = socket;
-        this.server = server;
+	/**
+	 * Since we want multiple users to enter the server, for each client, this Class is created as a thread.
+	 */
+	ClientHandler(Socket socket, Server server) {
+		this.socket = socket;
+		this.server = server;
 
-        client = new Client(server.getIdCounter());
-        commandHandler = new CommandHandler(this);
-        session = null;
-    }
+		client = new Client(server.getIdCounter());
+		commandHandler = new CommandHandler(this);
+		session = null;
+	}
 
-    /**
-     * Initializes the output/input and starts the infinite loop.
-     */
-    public void run() {
-        try {
-            out = new PrintWriter(socket.getOutputStream(), true);
-            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+	/**
+	 * Initializes the output/input and starts the infinite loop.
+	 */
+	public void run() {
+		try {
+			out = new PrintWriter(socket.getOutputStream(), true);
+			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            server.getMessageHandler().showMessage(getClientConnectedMessage());
+			server.getMessageHandler().showMessage(getClientConnectedMessage());
 
-            connectionLoop();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+			connectionLoop();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    private String getClientConnectedMessage() {
-        return "Client " + client.getRefName() + " has connected to the server.";
-    }
+	private String getClientConnectedMessage() {
+		return "Client " + client.getRefName() + " has connected to the server.";
+	}
 
-    /**
-     * If the user is diconnected in anyway, this function will be called.
-     * This function closes the socket and input/output.
-     */
-    public void closeSocket() {
-        try {
-            socket.close();
-            in.close();
-            out.close();
-            server.getMessageHandler().showMessage(getClientDisconnectedMessage());
-            if(server.getGameSessions().getByInvited(client.getId()) != null ) {
-                server.getGameSessions().getByInvited(client.getId()).endSession();
-            }
+	/**
+	 * If the user is diconnected in anyway, this function will be called.
+	 * This function closes the socket and input/output.
+	 */
+	public void closeSocket() {
+		try {
+			socket.close();
+			in.close();
+			out.close();
+			server.getMessageHandler().showMessage(getClientDisconnectedMessage());
+			if (server.getGameSessions().getByInvited(client.getId()) != null) {
+				server.getGameSessions().getByInvited(client.getId()).endSession();
+			}
 
-            if(server.getGameSessions().getByHost(client.getId()) != null ) {
-                server.getGameSessions().getByHost(client.getId()).endSession();
-            }
+			if (server.getGameSessions().getByHost(client.getId()) != null) {
+				server.getGameSessions().getByHost(client.getId()).endSession();
+			}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    private String getClientDisconnectedMessage() {
-        return "Client " + client.getRefName() + " has been disconnected.";
-    }
+	private String getClientDisconnectedMessage() {
+		return "Client " + client.getRefName() + " has been disconnected.";
+	}
 
-    /**
-     * To send a message to client.
-     */
-    public void sendMessage(String message) {
-        server.getMessageHandler().showMessage(getSendingToClientMessage(message));
-        out.println(message);
-        out.flush();
-    }
+	/**
+	 * To send a message to client.
+	 */
+	public void sendMessage(String message) {
+		server.getMessageHandler().showMessage(getSendingToClientMessage(message));
+		out.println(message);
+		out.flush();
+	}
 
-    private String getSendingToClientMessage(String message) {
-        return "Sending message to the client " + client.getRefName() + ": " + message;
-    }
+	private String getSendingToClientMessage(String message) {
+		return "Sending message to the client " + client.getRefName() + ": " + message;
+	}
 
-    /**
-     * The infinite loop which listens for client messages.
-     * If client requests the user list, the server sends the user list.
-     * If client wants to set their username, sets their username.
-     * If that username is already taken, kicks the client.
-     * After each of these steps, the client is informed.
-     * In case of connection end, the closeSocket function is called.
-     */
-    private void connectionLoop() {
-        try {
-            handleIncomingMessages();
-        } catch (IOException e) {
-            //
-        } finally {
-            terminateConnection();
-        }
-    }
+	/**
+	 * The infinite loop which listens for client messages.
+	 * If client requests the user list, the server sends the user list.
+	 * If client wants to set their username, sets their username.
+	 * If that username is already taken, kicks the client.
+	 * After each of these steps, the client is informed.
+	 * In case of connection end, the closeSocket function is called.
+	 */
+	private void connectionLoop() {
+		try {
+			handleIncomingMessages();
+		} catch (IOException e) {
+			//
+		} finally {
+			terminateConnection();
+		}
+	}
 
-    private void handleIncomingMessages() throws IOException {
-        String inputLine;
-        while ((inputLine = in.readLine()) != null && !isInterrupted()) {
-            displayReceivedMessage(inputLine);
+	private void handleIncomingMessages() throws IOException {
+		String inputLine;
+		while ((inputLine = in.readLine()) != null && !isInterrupted()) {
+			displayReceivedMessage(inputLine);
 
-            commandHandler.handle(inputLine);
-        }
-    }
+			commandHandler.handle(inputLine);
+		}
+	}
 
-    private void displayReceivedMessage(String message) {
-        server.getMessageHandler().showMessage(getReceivedFromClientMessage(message));
-    }
+	private void displayReceivedMessage(String message) {
+		server.getMessageHandler().showMessage(getReceivedFromClientMessage(message));
+	}
 
-    private String getReceivedFromClientMessage(String message) {
-        return "Received message from the client " + client.getRefName() + ": " + message;
-    }
+	private String getReceivedFromClientMessage(String message) {
+		return "Received message from the client " + client.getRefName() + ": " + message;
+	}
 
-    private void terminateConnection() {
-        if (socket.isClosed()) {
-            return;
-        }
+	private void terminateConnection() {
+		if (socket.isClosed()) {
+			return;
+		}
 
-        server.resetUserList();
-        server.getClientHandlers().remove(this);
-        closeSocket();
-    }
+		server.resetUserList();
+		server.getClientHandlers().remove(this);
+		closeSocket();
+	}
 
-    public Server getServer() {
-        return server;
-    }
+	public Server getServer() {
+		return server;
+	}
 
-    public Client getClient() {
-        return client;
-    }
+	public Client getClient() {
+		return client;
+	}
 
-    public boolean isAvailable() {
-        return session == null;
-    }
+	public boolean isAvailable() {
+		return session == null;
+	}
 
-    public GameSession getSession() {
-        return session;
-    }
+	public GameSession getSession() {
+		return session;
+	}
 
-    void setSession(GameSession session) {
-        this.session = session;
-    }
+	void setSession(GameSession session) {
+		this.session = session;
+	}
 }
