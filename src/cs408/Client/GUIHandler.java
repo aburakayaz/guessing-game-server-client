@@ -8,15 +8,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
 public class GUIHandler {
-	private Button connect;
-	private Button listUsers;
+	private Button connect, listUsers, invite;
 	private ListView onlineList;
 	private ObservableList<String> onlineUsers;
 	private Alert game;
 
-	GUIHandler(Button connect, Button listUsers, ListView onlineList) {
+	GUIHandler(Button connect, Button listUsers, Button invite, ListView onlineList) {
 		this.connect = connect;
 		this.listUsers = listUsers;
+		this.invite = invite;
 		this.onlineList = onlineList;
 		this.onlineUsers = FXCollections.observableArrayList();
 	}
@@ -26,10 +26,12 @@ public class GUIHandler {
 			if (connected) {
 				connect.setText("Disconnect");
 				listUsers.setDisable(false);
+				invite.setDisable(false);
 				return;
 			}
 			connect.setText("Connect");
 			listUsers.setDisable(true);
+			invite.setDisable(true);
 		});
 	}
 
