@@ -13,13 +13,13 @@ public class CommandHandler extends CommandHandlerAbstract {
 
     @Override
     protected void addCommands() {
-        commands.add(new StartGame(client));
-        commands.add(new Kick(client));
-        commands.add(new ProcessUserList(client));
-        commands.add(new ReceiveInvite(client));
-        commands.add(new ReceiveUserList(client));
-        commands.add(new Win(client));
-        commands.add(new Lose(client));
+        commands.put(StartGame.NAME, new StartGame(client));
+        commands.put(Kick.NAME, new Kick(client));
+        commands.put(ProcessUserList.NAME, new ProcessUserList(client));
+        commands.put(ReceiveInvite.NAME, new ReceiveInvite(client));
+        commands.put(ReceiveUserList.NAME, new ReceiveUserList(client));
+        commands.put(Win.NAME, new Win(client));
+        commands.put(Lose.NAME, new Lose(client));
     }
 
     @Override

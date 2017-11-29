@@ -9,7 +9,7 @@ public abstract class CommandHandlerAbstract {
 
     public void handle(String message) {
         String commandString = message.split(" ")[0];
-        Command command = commands.find(commandString);
+        Command command = commands.get(commandString);
 
         if (command == null) {
             unknownCommand(commandString);

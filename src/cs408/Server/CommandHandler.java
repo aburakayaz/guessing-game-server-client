@@ -14,12 +14,12 @@ class CommandHandler extends CommandHandlerAbstract {
 
     @Override
     protected void addCommands() {
-        commands.add(new SendUserList(clientHandler));
-        commands.add(new SetUsername(clientHandler));
-        commands.add(new Invite(clientHandler));
-        commands.add(new Accept(clientHandler));
-        commands.add(new Decline(clientHandler));
-        commands.add(new Surrender(clientHandler));
+        commands.put(SendUserList.NAME, new SendUserList(clientHandler));
+        commands.put(SetUsername.NAME, new SetUsername(clientHandler));
+        commands.put(Invite.NAME, new Invite(clientHandler));
+        commands.put(Accept.NAME, new Accept(clientHandler));
+        commands.put(Decline.NAME, new Decline(clientHandler));
+        commands.put(Surrender.NAME, new Surrender(clientHandler));
     }
 
     @Override
