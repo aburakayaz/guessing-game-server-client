@@ -1,5 +1,7 @@
 package cs408.Server;
 
+import cs408.Server.Game.GameSession;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -148,7 +150,7 @@ public class ClientHandler extends Thread {
 		return session;
 	}
 
-	void setSession(GameSession session) {
+	public void setSession(GameSession session) {
 		this.session = session;
 	}
 }

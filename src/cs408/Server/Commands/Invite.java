@@ -3,7 +3,7 @@ package cs408.Server.Commands;
 import cs408.Client.Commands.ReceiveInvite;
 import cs408.Common.Commands.UsesMessage;
 import cs408.Server.ClientHandler;
-import cs408.Server.GameSession;
+import cs408.Server.Game.GameSession;
 
 public class Invite extends CommandAbstract implements UsesMessage {
 	public static final String NAME = "/Invite";

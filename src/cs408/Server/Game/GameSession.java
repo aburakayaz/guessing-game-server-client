@@ -1,8 +1,9 @@
-package cs408.Server;
+package cs408.Server.Game;
 
 import cs408.Client.Commands.Lose;
 import cs408.Client.Commands.StartGame;
 import cs408.Client.Commands.Win;
+import cs408.Server.ClientHandler;
 
 public class GameSession {
 	private ClientHandler host, invited, loser, winner;
@@ -49,7 +50,7 @@ public class GameSession {
 		endSession();
 	}
 
-	void endSession() {
+	public void endSession() {
 		host.setSession(null);
 		invited.setSession(null);
 		host.getServer().getGameSessions().remove(this);

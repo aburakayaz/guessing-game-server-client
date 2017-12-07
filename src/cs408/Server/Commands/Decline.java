@@ -1,7 +1,7 @@
 package cs408.Server.Commands;
 
 import cs408.Server.ClientHandler;
-import cs408.Server.GameSession;
+import cs408.Server.Game.GameSession;
 
 public class Decline extends CommandAbstract {
 	public static final String NAME = "/Decline";

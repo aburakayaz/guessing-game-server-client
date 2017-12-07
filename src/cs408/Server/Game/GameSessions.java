@@ -1,4 +1,4 @@
-package cs408.Server;
+package cs408.Server.Game;
 
 import java.util.ArrayList;
 
