@@ -1,12 +1,13 @@
 package cs408.Server;
 
 public class Client {
-	private int id;
+	private int id, score;
 	private String username;
 
 	Client(int id) {
 		this.id = id;
 		username = "";
+		score = 0;
 	}
 
 	/**
@@ -40,5 +41,13 @@ public class Client {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public int getScore() {
+		return score;
+	}
+
+	public void incrementScore() {
+		score++;
 	}
 }

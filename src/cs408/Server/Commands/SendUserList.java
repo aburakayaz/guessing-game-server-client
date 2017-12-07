@@ -43,6 +43,8 @@ public class SendUserList extends CommandAbstract {
 			message.append(server.getClientHandlers().get(i).getClient().getId());
 			message.append(" : ");
 			message.append(server.getClientHandlers().get(i).getClient().getRefName());
+			message.append(" | Score ");
+			message.append(server.getClientHandlers().get(i).getClient().getScore());
 		}
 
 		server.setUserList(message.toString());
