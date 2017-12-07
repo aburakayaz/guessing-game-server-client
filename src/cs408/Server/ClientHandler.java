@@ -132,6 +132,10 @@ public class ClientHandler extends Thread {
 		closeSocket();
 	}
 
+	public void guessInGame(int guess) {
+		session.guess(client.getId(), guess);
+	}
+
 	public Server getServer() {
 		return server;
 	}

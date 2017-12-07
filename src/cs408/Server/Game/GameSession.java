@@ -11,7 +11,7 @@ public class GameSession {
 	private ClientHandler host, invited, loser, winner;
 	private boolean inviteAccepted;
 	private int randomNumber, hostGuess, invitedGuess;
-	private int hostWins, invitedWins;
+	private int hostWinCounter, invitedWinCounter, tieCounter;
 
 	public GameSession(ClientHandler host, ClientHandler invited) {
 		this.host = host;
@@ -20,7 +20,7 @@ public class GameSession {
 		this.host.setSession(this);
 		this.invited.setSession(this);
 
-		hostWins = invitedWins = 0;
+		hostWinCounter = invitedWinCounter = tieCounter = 0;
 		resetGame();
 	}
 
@@ -31,6 +31,93 @@ public class GameSession {
 
 	private void pickRandomNumber() {
 		randomNumber = ThreadLocalRandom.current().nextInt(1, 101);
+	}
+
+	public void guess(int playerId, int guess) {
+		setGuess(playerId, guess);
+
+		checkForRoundEnding();
+	}
+
+	private void setGuess(int playerId, int guess) {
+		if (playerId == host.getClient().getId()) {
+			hostGuess = guess;
+			return;
+		}
+
+		invitedGuess = guess;
+	}
+
+	private void checkForRoundEnding() {
+		if (hostGuess == -1 || invitedGuess == -1) {
+			return;
+		}
+
+		endCurrentRound();
+	}
+
+	private void endCurrentRound() {
+		int hostResult = Math.abs(randomNumber - hostGuess);
+		int invitedResult = Math.abs(randomNumber - invitedGuess);
+
+		if (hostResult == invitedResult) {
+			roundTie();
+			return;
+		}
+
+		if (hostResult < invitedResult) {
+			roundHostWin();
+			return;
+		}
+
+		roundInvitedWin();
+	}
+
+	private void roundHostWin() {
+		hostWinCounter++;
+
+		// TODO: Send appropriate information.
+
+		checkForGameEnding();
+	}
+
+	private void roundInvitedWin() {
+		invitedWinCounter++;
+
+		// TODO: Send appropriate information.
+
+		checkForGameEnding();
+	}
+
+	private void roundTie() {
+		invitedWinCounter++;
+		hostWinCounter++;
+		tieCounter++;
+
+		// TODO: Send appropriate information.
+	}
+
+	private void checkForGameEnding() {
+		int difference = Math.abs(hostWinCounter - invitedWinCounter);
+
+		if (difference == 0 || (difference == 1 &&
+				(hostWinCounter - tieCounter == 0 || invitedWinCounter - tieCounter == 0))) {
+			return;
+		}
+
+		endGame();
+	}
+
+	private void endGame() {
+		winner = host;
+		loser = invited;
+
+		if (hostWinCounter < invitedWinCounter) {
+			loser = host;
+			winner = invited;
+		}
+
+		gameOver();
 	}
 
 	public boolean isInviteAccepted() {
@@ -63,6 +150,9 @@ public class GameSession {
 	public void gameOver() {
 		winner.sendMessage(Win.NAME);
 		loser.sendMessage(Lose.NAME);
+
+		winner.getClient().incrementScore();
+		
 		endSession();
 	}
 

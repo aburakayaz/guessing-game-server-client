@@ -7,4 +7,9 @@ public class GameSessions extends HashMap<Integer, GameSession> {
 		put(session.getHost().getClient().getId(), session);
 		put(session.getInvited().getClient().getId(), session);
 	}
+
+	public void remove(GameSession session) {
+		remove(session.getHost().getClient().getId(), session);
+		remove(session.getInvited().getClient().getId(), session);
+	}
 }
