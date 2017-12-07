@@ -11,7 +11,6 @@ public class GUIHandler {
 	private Button connect, listUsers, invite;
 	private ListView onlineList;
 	private ObservableList<String> onlineUsers;
-	private Alert game;
 
 	GUIHandler(Button connect, Button listUsers, Button invite, ListView onlineList) {
 		this.connect = connect;
@@ -46,17 +45,5 @@ public class GUIHandler {
 		Platform.runLater(() -> {
 			onlineUsers.clear();
 		});
-	}
-
-	public void closeGame() {
-		Platform.runLater(() -> game.close());
-	}
-
-	public Alert getGame() {
-		return game;
-	}
-
-	public void setGame(Alert game) {
-		this.game = game;
 	}
 }

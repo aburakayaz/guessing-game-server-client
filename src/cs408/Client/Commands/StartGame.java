@@ -4,10 +4,17 @@ import cs408.Client.Client;
 import cs408.Common.Commands.UsesMessage;
 import cs408.Server.Commands.Surrender;
 import javafx.application.Platform;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.util.Optional;
 
 public class StartGame extends CommandAbstract implements UsesMessage {
@@ -34,16 +41,17 @@ public class StartGame extends CommandAbstract implements UsesMessage {
 	}
 
 	private void startGame() {
-		ButtonType surrender = new ButtonType("Surrender", ButtonBar.ButtonData.OK_DONE);
-		client.getGuiHandler().setGame(new Alert(Alert.AlertType.INFORMATION,
-				"You can surrender or you can keep playing",
-				surrender));
-		client.getGuiHandler().getGame().setTitle("Game Window");
-		client.getGuiHandler().getGame().setHeaderText("You are playing with " + username);
-
-		Optional<ButtonType> result = client.getGuiHandler().getGame().showAndWait();
-		if (result.isPresent() && result.get() == surrender) {
-			client.sendMessage(Surrender.NAME);
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/cs408/Client/Game/game.fxml"));
+			Parent root1 = (Parent) fxmlLoader.load();
+			Stage stage = new Stage();
+			stage.initModality(Modality.APPLICATION_MODAL);
+			stage.initStyle(StageStyle.UNDECORATED);
+			stage.setTitle("You are playing with " + username);
+			stage.setScene(new Scene(root1));
+			stage.show();
+		} catch (IOException e) {
+			// TODO: Implement errors
 		}
 	}
 

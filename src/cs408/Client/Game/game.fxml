@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121"
+          xmlns:fx="http://javafx.com/fxml/1" fx:controller="cs408.Client.Game.Controller">
+    <columnConstraints>
+        <ColumnConstraints/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints/>
+    </rowConstraints>
+    <children>
+        <AnchorPane prefHeight="250.0" prefWidth="250.0">
+            <Label layoutX="60.0" layoutY="50.0" text="Guess a number [1-100]"/>
+            <TextField fx:id="numberTextField" layoutX="50.0" layoutY="75.0"/>
+            <Button fx:id="guessButton" layoutX="100.0" layoutY="120.0" mnemonicParsing="false" text="Guess"
+                    onAction="#guess"/>
+            <Separator layoutX="25.0" layoutY="180.0" prefWidth="200.0"/>
+            <Button fx:id="surrenderButton" layoutX="90.0" layoutY="200.0" mnemonicParsing="false" text="Surrender"
+                    onAction="#surrender" textFill="RED"/>
+        </AnchorPane>
+    </children>
+</GridPane>

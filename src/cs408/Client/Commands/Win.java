@@ -17,6 +17,6 @@ public class Win extends CommandAbstract {
 	@Override
 	public void act() {
 		client.getMessageHandler().showMessage("You have won the game.");
-		client.getGuiHandler().closeGame();
+		// TODO: Close the game window.
 	}
 }
