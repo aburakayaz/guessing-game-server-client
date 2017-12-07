@@ -1,23 +1,10 @@
 package cs408.Server.Game;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
-public class GameSessions extends ArrayList<GameSession> {
-	public GameSession getByHost(int id) {
-		for (int i = 0; i < size(); i++) {
-			if (get(i).getHost().getClient().getId() == id) {
-				return get(i);
-			}
-		}
-		return null;
-	}
-
-	public GameSession getByInvited(int id) {
-		for (int i = 0; i < size(); i++) {
-			if (get(i).getInvited().getClient().getId() == id) {
-				return get(i);
-			}
-		}
-		return null;
+public class GameSessions extends HashMap<Integer, GameSession> {
+	public void put(GameSession session) {
+		put(session.getHost().getClient().getId(), session);
+		put(session.getInvited().getClient().getId(), session);
 	}
 }

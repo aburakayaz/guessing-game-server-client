@@ -42,7 +42,8 @@ public class Invite extends CommandAbstract implements UsesMessage {
 			return;
 		}
 
-		server.getGameSessions().add(new GameSession(clientHandler, targetClient));
+		server.getGameSessions().put(new GameSession(clientHandler, targetClient));
+
 		targetClient.sendMessage(ReceiveInvite.NAME + " " + clientHandler.getClient().getId() + " " + clientHandler
 				.getClient().getRefName());
 	}

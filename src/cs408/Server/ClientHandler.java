@@ -59,14 +59,12 @@ public class ClientHandler extends Thread {
 			in.close();
 			out.close();
 			server.getMessageHandler().showMessage(getClientDisconnectedMessage());
-			if (server.getGameSessions().getByInvited(client.getId()) != null) {
-				server.getGameSessions().getByInvited(client.getId()).endSession();
-			}
 
-			if (server.getGameSessions().getByHost(client.getId()) != null) {
-				server.getGameSessions().getByHost(client.getId()).endSession();
-			}
+			GameSession session = server.getGameSessions().get(client.getId());
 
+			if (session != null) {
+				session.endSession();
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

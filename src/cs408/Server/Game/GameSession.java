@@ -5,9 +5,13 @@ import cs408.Client.Commands.StartGame;
 import cs408.Client.Commands.Win;
 import cs408.Server.ClientHandler;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class GameSession {
 	private ClientHandler host, invited, loser, winner;
 	private boolean inviteAccepted;
+	private int randomNumber, hostGuess, invitedGuess;
+	private int hostWins, invitedWins;
 
 	public GameSession(ClientHandler host, ClientHandler invited) {
 		this.host = host;
@@ -15,6 +19,18 @@ public class GameSession {
 
 		this.host.setSession(this);
 		this.invited.setSession(this);
+
+		hostWins = invitedWins = 0;
+		resetGame();
+	}
+
+	private void resetGame() {
+		pickRandomNumber();
+		hostGuess = invitedGuess = -1;
+	}
+
+	private void pickRandomNumber() {
+		randomNumber = ThreadLocalRandom.current().nextInt(1, 101);
 	}
 
 	public boolean isInviteAccepted() {

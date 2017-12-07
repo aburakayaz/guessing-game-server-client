@@ -17,7 +17,7 @@ public class Decline extends CommandAbstract {
 
 	@Override
 	public void act() {
-		GameSession gameSession = server.getGameSessions().getByInvited(clientHandler.getClient().getId());
+		GameSession gameSession = server.getGameSessions().get(clientHandler.getClient().getId());
 		if (gameSession == null) {
 			server.showMessage("A game session could not be found.");
 			clientHandler.sendMessage("The invitation is no longer valid.");
