@@ -114,7 +114,7 @@ public class Server extends Thread {
 		this.userList = userList;
 	}
 
-	void resetUserList() {
+	public void resetUserList() {
 		userList = "";
 	}
 
