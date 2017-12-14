@@ -19,6 +19,7 @@ class CommandHandler extends CommandHandlerAbstract {
 		commands.put(Accept.NAME, new Accept(clientHandler));
 		commands.put(Decline.NAME, new Decline(clientHandler));
 		commands.put(Surrender.NAME, new Surrender(clientHandler));
+		commands.put(Guess.NAME, new Guess(clientHandler));
 	}
 
 	@Override
