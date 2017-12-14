@@ -20,6 +20,10 @@ public class CommandHandler extends CommandHandlerAbstract {
 		commands.put(ReceiveUserList.NAME, new ReceiveUserList(client));
 		commands.put(Win.NAME, new Win(client));
 		commands.put(Lose.NAME, new Lose(client));
+		commands.put(RoundLose.NAME, new RoundLose(client));
+		commands.put(RoundWin.NAME, new RoundWin(client));
+		commands.put(RoundTie.NAME, new RoundTie(client));
+
 	}
 
 	@Override
