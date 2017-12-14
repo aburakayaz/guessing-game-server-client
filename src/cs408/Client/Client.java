@@ -1,10 +1,9 @@
 package cs408.Client;
 
 import cs408.Client.Commands.CommandHandler;
+import cs408.Client.Game.GameController;
 import cs408.Common.MessageHandler;
-import cs408.Server.Commands.Invite;
-import cs408.Server.Commands.SendUserList;
-import cs408.Server.Commands.SetUsername;
+import cs408.Server.Commands.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -29,6 +28,7 @@ public class Client extends Thread {
 	private boolean connected = true;
 	private String username;
 	private ObservableList<String> onlineUsers;
+	public GameController gameController;
 
 	/**
 	 * This class is the client thread, in which the application will listen the server for incoming messages and
@@ -70,6 +70,18 @@ public class Client extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	public void surrender() {
+		messageHandler.showMessage("Surrendering...");
+		sendMessage(Surrender.NAME);
+	}
+
+	/**
+	 * Guesses a number
+	 */
+	public void guessNumber(String number) {
+		messageHandler.showMessage("Guessing the number " + number);
+		sendMessage(Guess.NAME + " " + number);
 	}
 
 	/**
@@ -150,5 +162,13 @@ public class Client extends Thread {
 
 	public MessageHandler getMessageHandler() {
 		return messageHandler;
+	}
+
+	public GameController getGameController() {
+		return gameController;
+	}
+
+	public void setGameController(GameController gameController) {
+		this.gameController = gameController;
 	}
 }
