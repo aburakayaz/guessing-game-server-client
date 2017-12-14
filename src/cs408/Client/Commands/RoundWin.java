@@ -1,9 +1,10 @@
 package cs408.Client.Commands;
 
 import cs408.Client.Client;
+import cs408.Common.Commands.UsesMessage;
 import javafx.application.Platform;
 
-public class RoundWin extends CommandAbstract {
+public class RoundWin extends CommandAbstract implements UsesMessage {
 	public static final String NAME = "/RoundWin";
 
 	public RoundWin(Client client) {
@@ -23,5 +24,11 @@ public class RoundWin extends CommandAbstract {
 
 	public void setScore() {
 		client.getGameController().setScore(0);
+	}
+
+	@Override
+	public void useMessage(String message) {
+		String shownMessage = "The number was: " + message.split(" ")[1];
+		client.getMessageHandler().showMessage(shownMessage);
 	}
 }

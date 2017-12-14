@@ -58,26 +58,27 @@ public class GameSession {
 		int hostResult = Math.abs(randomNumber - hostGuess);
 		int invitedResult = Math.abs(randomNumber - invitedGuess);
 
-		resetGame();
-
 		if (hostResult == invitedResult) {
 			roundTie();
+			resetGame();
 			return;
 		}
 
 		if (hostResult < invitedResult) {
 			roundHostWin();
+			resetGame();
 			return;
 		}
 
 		roundInvitedWin();
+		resetGame();
 	}
 
 	private void roundHostWin() {
 		hostWinCounter++;
 
-		host.sendMessage(RoundWin.NAME);
-		invited.sendMessage(RoundLose.NAME);
+		host.sendMessage(RoundWin.NAME + " " + randomNumber);
+		invited.sendMessage(RoundLose.NAME + " " + randomNumber);
 
 		checkForGameEnding();
 	}
@@ -85,8 +86,8 @@ public class GameSession {
 	private void roundInvitedWin() {
 		invitedWinCounter++;
 
-		host.sendMessage(RoundLose.NAME);
-		invited.sendMessage(RoundWin.NAME);
+		host.sendMessage(RoundLose.NAME + " " + randomNumber);
+		invited.sendMessage(RoundWin.NAME + " " + randomNumber);
 
 		checkForGameEnding();
 	}
@@ -96,8 +97,8 @@ public class GameSession {
 		hostWinCounter++;
 		tieCounter++;
 
-		host.sendMessage(RoundTie.NAME);
-		invited.sendMessage(RoundTie.NAME);
+		host.sendMessage(RoundTie.NAME + " " + randomNumber);
+		invited.sendMessage(RoundTie.NAME + " " + randomNumber);
 	}
 
 	private void checkForGameEnding() {
