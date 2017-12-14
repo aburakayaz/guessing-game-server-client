@@ -1,8 +1,6 @@
 package cs408.Server.Game;
 
-import cs408.Client.Commands.Lose;
-import cs408.Client.Commands.StartGame;
-import cs408.Client.Commands.Win;
+import cs408.Client.Commands.*;
 import cs408.Server.ClientHandler;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -60,6 +58,8 @@ public class GameSession {
 		int hostResult = Math.abs(randomNumber - hostGuess);
 		int invitedResult = Math.abs(randomNumber - invitedGuess);
 
+		resetGame();
+
 		if (hostResult == invitedResult) {
 			roundTie();
 			return;
@@ -76,7 +76,8 @@ public class GameSession {
 	private void roundHostWin() {
 		hostWinCounter++;
 
-		// TODO: Send appropriate information.
+		host.sendMessage(RoundWin.NAME);
+		invited.sendMessage(RoundLose.NAME);
 
 		checkForGameEnding();
 	}
@@ -84,7 +85,8 @@ public class GameSession {
 	private void roundInvitedWin() {
 		invitedWinCounter++;
 
-		// TODO: Send appropriate information.
+		host.sendMessage(RoundLose.NAME);
+		invited.sendMessage(RoundWin.NAME);
 
 		checkForGameEnding();
 	}
@@ -94,7 +96,8 @@ public class GameSession {
 		hostWinCounter++;
 		tieCounter++;
 
-		// TODO: Send appropriate information.
+		host.sendMessage(RoundTie.NAME);
+		invited.sendMessage(RoundTie.NAME);
 	}
 
 	private void checkForGameEnding() {
@@ -152,7 +155,9 @@ public class GameSession {
 		loser.sendMessage(Lose.NAME);
 
 		winner.getClient().incrementScore();
-		
+
+		winner.getServer().resetUserList();
+
 		endSession();
 	}
 
@@ -160,6 +165,18 @@ public class GameSession {
 		host.setSession(null);
 		invited.setSession(null);
 		host.getServer().getGameSessions().remove(this);
+	}
+
+	public void connectionEnd(ClientHandler connectionEnder) {
+		winner = host;
+		loser = invited;
+
+		if(connectionEnder == host) {
+			winner = invited;
+			loser = host;
+		}
+
+		gameOver();
 	}
 
 	public void setLoser(ClientHandler loser) {
