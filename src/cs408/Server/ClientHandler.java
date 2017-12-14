@@ -63,7 +63,7 @@ public class ClientHandler extends Thread {
 			GameSession session = server.getGameSessions().get(client.getId());
 
 			if (session != null) {
-				session.endSession();
+				session.connectionEnd(this);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
