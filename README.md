@@ -5,5 +5,5 @@ The game currently consists of multiple clients and the server, clients try to g
 
 ## How to play: 
 ```
-TODO: add install instructions.
+TODO: add run instructions.
 ```
