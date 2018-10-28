@@ -6,50 +6,50 @@ import cs408.Server.ClientHandler;
 import cs408.Server.Game.GameSession;
 
 public class Invite extends CommandAbstract implements UsesMessage {
-	public static final String NAME = "/Invite";
-	private int id;
+    public static final String NAME = "/Invite";
+    private int id;
 
-	public Invite(ClientHandler clientHandler) {
-		super(clientHandler);
-	}
+    public Invite(ClientHandler clientHandler) {
+        super(clientHandler);
+    }
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public void act() {
-		if (!clientHandler.isAvailable()) {
-			clientHandler.sendMessage("You have already invited someone else or you are in a game!");
-			return;
-		}
+    @Override
+    public void act() {
+        if (!clientHandler.isAvailable()) {
+            clientHandler.sendMessage("You have already invited someone else or you are in a game!");
+            return;
+        }
 
-		if (id == clientHandler.getClient().getId()) {
-			clientHandler.sendMessage("You cannot invite yourself!");
-			return;
-		}
+        if (id == clientHandler.getClient().getId()) {
+            clientHandler.sendMessage("You cannot invite yourself!");
+            return;
+        }
 
-		ClientHandler targetClient = server.getClientHandlers().getByID(id);
+        ClientHandler targetClient = server.getClientHandlers().getByID(id);
 
-		if (targetClient == null) {
-			clientHandler.sendMessage("The user you invited is no longer connected!");
-			return;
-		}
+        if (targetClient == null) {
+            clientHandler.sendMessage("The user you invited is no longer connected!");
+            return;
+        }
 
-		if (!targetClient.isAvailable()) {
-			clientHandler.sendMessage("The user you invited is not available right now!");
-			return;
-		}
+        if (!targetClient.isAvailable()) {
+            clientHandler.sendMessage("The user you invited is not available right now!");
+            return;
+        }
 
-		server.getGameSessions().put(new GameSession(clientHandler, targetClient));
+        server.getGameSessions().put(new GameSession(clientHandler, targetClient));
 
-		targetClient.sendMessage(ReceiveInvite.NAME + " " + clientHandler.getClient().getId() + " " + clientHandler
-				.getClient().getRefName());
-	}
+        targetClient.sendMessage(ReceiveInvite.NAME + " " + clientHandler.getClient().getId() + " " + clientHandler
+                .getClient().getRefName());
+    }
 
-	@Override
-	public void useMessage(String message) {
-		id = Integer.parseInt(message.split(" ")[1]);
-	}
+    @Override
+    public void useMessage(String message) {
+        id = Integer.parseInt(message.split(" ")[1]);
+    }
 }

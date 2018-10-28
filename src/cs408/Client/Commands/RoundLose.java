@@ -5,30 +5,30 @@ import cs408.Common.Commands.UsesMessage;
 import javafx.application.Platform;
 
 public class RoundLose extends CommandAbstract implements UsesMessage {
-	public static final String NAME = "/RoundLose";
+    public static final String NAME = "/RoundLose";
 
-	public RoundLose(Client client) {
-		super(client);
-	}
+    public RoundLose(Client client) {
+        super(client);
+    }
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public void act() {
-		client.getMessageHandler().showMessage("You have lost the round. Next round begins.");
-		Platform.runLater(this::setScore);
-	}
+    @Override
+    public void act() {
+        client.getMessageHandler().showMessage("You have lost the round. Next round begins.");
+        Platform.runLater(this::setScore);
+    }
 
-	public void setScore() {
-		client.getGameController().setScore(1);
-	}
+    public void setScore() {
+        client.getGameController().setScore(1);
+    }
 
-	@Override
-	public void useMessage(String message) {
-		String shownMessage = "The number was: " + message.split(" ")[1];
-		client.getMessageHandler().showMessage(shownMessage);
-	}
+    @Override
+    public void useMessage(String message) {
+        String shownMessage = "The number was: " + message.split(" ")[1];
+        client.getMessageHandler().showMessage(shownMessage);
+    }
 }

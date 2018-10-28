@@ -5,11 +5,11 @@ import cs408.Server.ClientHandler;
 import cs408.Server.Server;
 
 abstract class CommandAbstract implements Command {
-	ClientHandler clientHandler;
-	Server server;
+    ClientHandler clientHandler;
+    Server server;
 
-	public CommandAbstract(ClientHandler clientHandler) {
-		this.clientHandler = clientHandler;
-		this.server = clientHandler.getServer();
-	}
+    public CommandAbstract(ClientHandler clientHandler) {
+        this.clientHandler = clientHandler;
+        this.server = clientHandler.getServer();
+    }
 }
