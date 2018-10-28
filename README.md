@@ -9,3 +9,4 @@ Install java from https://www.java.com/en/download/, clone the repository and fo
 1. Run the server.jar file located in builds, choose a port and click listen.
 2. Run the client.jar file located in builds for each desired client instance, enter the ip address and port of the server and connect. 
 3. Click List users on all of the clients.
+4. Invite a user to a duel on any of the clients by selecting the user and clicking invite.
