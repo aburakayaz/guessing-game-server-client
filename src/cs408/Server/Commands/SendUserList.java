@@ -5,50 +5,50 @@ import cs408.Client.Commands.ReceiveUserList;
 import cs408.Server.ClientHandler;
 
 public class SendUserList extends CommandAbstract {
-	public static final String NAME = "/SendUserList";
+    public static final String NAME = "/SendUserList";
 
-	public SendUserList(ClientHandler clientHandler) {
-		super(clientHandler);
-	}
+    public SendUserList(ClientHandler clientHandler) {
+        super(clientHandler);
+    }
 
-	@Override
-	public String getName() {
-		return NAME;
-	}
+    @Override
+    public String getName() {
+        return NAME;
+    }
 
-	@Override
-	public void act() {
-		server.getMessageHandler().showMessage(getServerMessage());
+    @Override
+    public void act() {
+        server.getMessageHandler().showMessage(getServerMessage());
 
-		clientHandler.sendMessage(getClientMessage());
-	}
+        clientHandler.sendMessage(getClientMessage());
+    }
 
-	private String getServerMessage() {
-		return "Client" +
-				clientHandler.getClient().getRefName() +
-				" wants the current player list. Sending...";
-	}
+    private String getServerMessage() {
+        return "Client" +
+                clientHandler.getClient().getRefName() +
+                " wants the current player list. Sending...";
+    }
 
-	private String getClientMessage() {
-		if (server.isUserListUpToDate()) {
-			return server.getUserList();
-		}
+    private String getClientMessage() {
+        if (server.isUserListUpToDate()) {
+            return server.getUserList();
+        }
 
-		StringBuilder message = new StringBuilder(ReceiveUserList.NAME + " User List:");
+        StringBuilder message = new StringBuilder(ReceiveUserList.NAME + " User List:");
 
-		for (int i = 0; i < server.getClientHandlers().size(); i++) {
-			message.append("\n");
-			message.append(ProcessUserList.NAME);
-			message.append(" User : ");
-			message.append(server.getClientHandlers().get(i).getClient().getId());
-			message.append(" : ");
-			message.append(server.getClientHandlers().get(i).getClient().getRefName());
-			message.append(" | Score ");
-			message.append(server.getClientHandlers().get(i).getClient().getScore());
-		}
+        for (int i = 0; i < server.getClientHandlers().size(); i++) {
+            message.append("\n");
+            message.append(ProcessUserList.NAME);
+            message.append(" User : ");
+            message.append(server.getClientHandlers().get(i).getClient().getId());
+            message.append(" : ");
+            message.append(server.getClientHandlers().get(i).getClient().getRefName());
+            message.append(" | Score ");
+            message.append(server.getClientHandlers().get(i).getClient().getScore());
+        }
 
-		server.setUserList(message.toString());
+        server.setUserList(message.toString());
 
-		return message.toString();
-	}
+        return message.toString();
+    }
 }

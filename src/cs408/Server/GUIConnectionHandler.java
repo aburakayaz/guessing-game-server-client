@@ -5,27 +5,27 @@ import javafx.application.Platform;
 import javafx.scene.control.Button;
 
 public class GUIConnectionHandler implements ConnectionHandler {
-	private Button listen;
+    private Button listen;
 
-	/**
-	 * This class implements the ConnectionHandler interface.
-	 */
+    /**
+     * This class implements the ConnectionHandler interface.
+     */
 
-	GUIConnectionHandler(Button listen) {
-		this.listen = listen;
-	}
+    GUIConnectionHandler(Button listen) {
+        this.listen = listen;
+    }
 
-	/**
-	 * When connection state changes, the GUI should be updated (listen for instance)
-	 */
-	@Override
-	public void changeState(boolean connected) {
-		Platform.runLater(() -> {
-			if (connected) {
-				listen.setText("Terminate");
-				return;
-			}
-			listen.setText("Listen");
-		});
-	}
+    /**
+     * When connection state changes, the GUI should be updated (listen for instance)
+     */
+    @Override
+    public void changeState(boolean connected) {
+        Platform.runLater(() -> {
+            if (connected) {
+                listen.setText("Terminate");
+                return;
+            }
+            listen.setText("Listen");
+        });
+    }
 }

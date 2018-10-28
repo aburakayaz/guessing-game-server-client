@@ -1,53 +1,53 @@
 package cs408.Server;
 
 public class Client {
-	private int id, score;
-	private String username;
+    private int id, score;
+    private String username;
 
-	Client(int id) {
-		this.id = id;
-		username = "";
-		score = 0;
-	}
+    Client(int id) {
+        this.id = id;
+        username = "";
+        score = 0;
+    }
 
-	/**
-	 * If the user has an username (which they don't have at
-	 * the very first step of their connection) this function
-	 * will return the clientId instead of username.
-	 */
-	public String getRefName() {
-		if (username == null) {
-			return String.valueOf(id);
-		}
+    /**
+     * If the user has an username (which they don't have at
+     * the very first step of their connection) this function
+     * will return the clientId instead of username.
+     */
+    public String getRefName() {
+        if (username == null) {
+            return String.valueOf(id);
+        }
 
-		return username;
-	}
+        return username;
+    }
 
-	public boolean hasUsername() {
-		return !username.equals("");
-	}
+    public boolean hasUsername() {
+        return !username.equals("");
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getUsername() {
+        return username;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-	public int getScore() {
-		return score;
-	}
+    public int getScore() {
+        return score;
+    }
 
-	public void incrementScore() {
-		score++;
-	}
+    public void incrementScore() {
+        score++;
+    }
 }

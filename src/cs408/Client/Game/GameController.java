@@ -7,74 +7,74 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class GameController {
-	@FXML
-	private TextField numberTextField;
+    @FXML
+    private TextField numberTextField;
 
-	@FXML
-	private Button guessButton;
+    @FXML
+    private Button guessButton;
 
-	@FXML
-	private Button surrenderButton;
+    @FXML
+    private Button surrenderButton;
 
-	@FXML
-	private Label myScore;
+    @FXML
+    private Label myScore;
 
-	@FXML
-	private Label enemyScore;
+    @FXML
+    private Label enemyScore;
 
-	@FXML
-	private Label status;
+    @FXML
+    private Label status;
 
-	Client client;
-	private boolean gameFinished = false;
+    Client client;
+    private boolean gameFinished = false;
 
-	public void setGameResult(boolean win) {
-		gameFinished = true;
+    public void setGameResult(boolean win) {
+        gameFinished = true;
 
-		status.setText("You Lost!");
+        status.setText("You Lost!");
 
-		if(win) {
-			status.setText("You won!");
-		}
+        if (win) {
+            status.setText("You won!");
+        }
 
-		guessButton.setDisable(true);
-		numberTextField.setDisable(true);
-		surrenderButton.setDisable(true);
-	}
+        guessButton.setDisable(true);
+        numberTextField.setDisable(true);
+        surrenderButton.setDisable(true);
+    }
 
-	public void setScore(int roundResult) {
-		if(roundResult == 0) {
-			myScore.setText(Integer.toString(Integer.parseInt(myScore.getText()) + 1));
-			status.setText("Round Won!");
-			return;
-		}
+    public void setScore(int roundResult) {
+        if (roundResult == 0) {
+            myScore.setText(Integer.toString(Integer.parseInt(myScore.getText()) + 1));
+            status.setText("Round Won!");
+            return;
+        }
 
-		if(roundResult == 1) {
-			enemyScore.setText(Integer.toString(Integer.parseInt(enemyScore.getText()) + 1));
-			status.setText("Round Lost!");
-			return;
-		}
+        if (roundResult == 1) {
+            enemyScore.setText(Integer.toString(Integer.parseInt(enemyScore.getText()) + 1));
+            status.setText("Round Lost!");
+            return;
+        }
 
-		status.setText("Round Tie!");
+        status.setText("Round Tie!");
 
-		numberTextField.setText("");
+        numberTextField.setText("");
 
-	}
+    }
 
-	public void setClient(Client client) {
-		this.client = client;
-	}
+    public void setClient(Client client) {
+        this.client = client;
+    }
 
-	public void guess() {
-		client.guessNumber(numberTextField.getText());
-		status.setText("Waiting");
-	}
+    public void guess() {
+        client.guessNumber(numberTextField.getText());
+        status.setText("Waiting");
+    }
 
-	public void surrender() {
-		client.surrender();
-	}
+    public void surrender() {
+        client.surrender();
+    }
 
-	public boolean isGameFinished() {
-		return gameFinished;
-	}
+    public boolean isGameFinished() {
+        return gameFinished;
+    }
 }

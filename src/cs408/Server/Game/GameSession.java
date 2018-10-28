@@ -6,200 +6,200 @@ import cs408.Server.ClientHandler;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class GameSession {
-	private ClientHandler host, invited, loser, winner;
-	private boolean inviteAccepted;
-	private int randomNumber, hostGuess, invitedGuess;
-	private int hostWinCounter, invitedWinCounter, tieCounter;
+    private ClientHandler host, invited, loser, winner;
+    private boolean inviteAccepted;
+    private int randomNumber, hostGuess, invitedGuess;
+    private int hostWinCounter, invitedWinCounter, tieCounter;
 
-	public GameSession(ClientHandler host, ClientHandler invited) {
-		this.host = host;
-		this.invited = invited;
+    public GameSession(ClientHandler host, ClientHandler invited) {
+        this.host = host;
+        this.invited = invited;
 
-		this.host.setSession(this);
-		this.invited.setSession(this);
+        this.host.setSession(this);
+        this.invited.setSession(this);
 
-		hostWinCounter = invitedWinCounter = tieCounter = 0;
-		resetGame();
-	}
+        hostWinCounter = invitedWinCounter = tieCounter = 0;
+        resetGame();
+    }
 
-	private void resetGame() {
-		pickRandomNumber();
-		hostGuess = invitedGuess = -1;
-	}
+    private void resetGame() {
+        pickRandomNumber();
+        hostGuess = invitedGuess = -1;
+    }
 
-	private void pickRandomNumber() {
-		randomNumber = ThreadLocalRandom.current().nextInt(1, 101);
-	}
+    private void pickRandomNumber() {
+        randomNumber = ThreadLocalRandom.current().nextInt(1, 101);
+    }
 
-	public void guess(int playerId, int guess) {
-		setGuess(playerId, guess);
+    public void guess(int playerId, int guess) {
+        setGuess(playerId, guess);
 
-		checkForRoundEnding();
-	}
+        checkForRoundEnding();
+    }
 
-	private void setGuess(int playerId, int guess) {
-		if (playerId == host.getClient().getId()) {
-			hostGuess = guess;
-			return;
-		}
+    private void setGuess(int playerId, int guess) {
+        if (playerId == host.getClient().getId()) {
+            hostGuess = guess;
+            return;
+        }
 
-		invitedGuess = guess;
-	}
+        invitedGuess = guess;
+    }
 
-	private void checkForRoundEnding() {
-		if (hostGuess == -1 || invitedGuess == -1) {
-			return;
-		}
+    private void checkForRoundEnding() {
+        if (hostGuess == -1 || invitedGuess == -1) {
+            return;
+        }
 
-		endCurrentRound();
-	}
+        endCurrentRound();
+    }
 
-	private void endCurrentRound() {
-		int hostResult = Math.abs(randomNumber - hostGuess);
-		int invitedResult = Math.abs(randomNumber - invitedGuess);
+    private void endCurrentRound() {
+        int hostResult = Math.abs(randomNumber - hostGuess);
+        int invitedResult = Math.abs(randomNumber - invitedGuess);
 
-		if (hostResult == invitedResult) {
-			roundTie();
-			resetGame();
-			return;
-		}
+        if (hostResult == invitedResult) {
+            roundTie();
+            resetGame();
+            return;
+        }
 
-		if (hostResult < invitedResult) {
-			roundHostWin();
-			resetGame();
-			return;
-		}
+        if (hostResult < invitedResult) {
+            roundHostWin();
+            resetGame();
+            return;
+        }
 
-		roundInvitedWin();
-		resetGame();
-	}
+        roundInvitedWin();
+        resetGame();
+    }
 
-	private void roundHostWin() {
-		hostWinCounter++;
+    private void roundHostWin() {
+        hostWinCounter++;
 
-		host.sendMessage(RoundWin.NAME + " " + randomNumber);
-		invited.sendMessage(RoundLose.NAME + " " + randomNumber);
+        host.sendMessage(RoundWin.NAME + " " + randomNumber);
+        invited.sendMessage(RoundLose.NAME + " " + randomNumber);
 
-		checkForGameEnding();
-	}
+        checkForGameEnding();
+    }
 
-	private void roundInvitedWin() {
-		invitedWinCounter++;
+    private void roundInvitedWin() {
+        invitedWinCounter++;
 
-		host.sendMessage(RoundLose.NAME + " " + randomNumber);
-		invited.sendMessage(RoundWin.NAME + " " + randomNumber);
+        host.sendMessage(RoundLose.NAME + " " + randomNumber);
+        invited.sendMessage(RoundWin.NAME + " " + randomNumber);
 
-		checkForGameEnding();
-	}
+        checkForGameEnding();
+    }
 
-	private void roundTie() {
-		invitedWinCounter++;
-		hostWinCounter++;
-		tieCounter++;
+    private void roundTie() {
+        invitedWinCounter++;
+        hostWinCounter++;
+        tieCounter++;
 
-		host.sendMessage(RoundTie.NAME + " " + randomNumber);
-		invited.sendMessage(RoundTie.NAME + " " + randomNumber);
-	}
+        host.sendMessage(RoundTie.NAME + " " + randomNumber);
+        invited.sendMessage(RoundTie.NAME + " " + randomNumber);
+    }
 
-	private void checkForGameEnding() {
-		int difference = Math.abs(hostWinCounter - invitedWinCounter);
+    private void checkForGameEnding() {
+        int difference = Math.abs(hostWinCounter - invitedWinCounter);
 
-		if (difference == 0 || (difference == 1 &&
-				(hostWinCounter - tieCounter == 0 || invitedWinCounter - tieCounter == 0))) {
-			return;
-		}
+        if (difference == 0 || (difference == 1 &&
+                (hostWinCounter - tieCounter == 0 || invitedWinCounter - tieCounter == 0))) {
+            return;
+        }
 
-		endGame();
-	}
+        endGame();
+    }
 
-	private void endGame() {
-		winner = host;
-		loser = invited;
+    private void endGame() {
+        winner = host;
+        loser = invited;
 
-		if (hostWinCounter < invitedWinCounter) {
-			loser = host;
-			winner = invited;
-		}
+        if (hostWinCounter < invitedWinCounter) {
+            loser = host;
+            winner = invited;
+        }
 
-		gameOver();
-	}
+        gameOver();
+    }
 
-	public boolean isInviteAccepted() {
-		return inviteAccepted;
-	}
+    public boolean isInviteAccepted() {
+        return inviteAccepted;
+    }
 
-	public void setInviteAccepted(boolean inviteAccepted) {
-		this.inviteAccepted = inviteAccepted;
-		if (!inviteAccepted) {
-			informUsersNegative();
-			return;
-		}
-		informUsersPositive();
-	}
+    public void setInviteAccepted(boolean inviteAccepted) {
+        this.inviteAccepted = inviteAccepted;
+        if (!inviteAccepted) {
+            informUsersNegative();
+            return;
+        }
+        informUsersPositive();
+    }
 
-	private void informUsersPositive() {
-		host.sendMessage(invited.getClient().getRefName() + " has accepted your game invite!");
-		host.sendMessage("The game is starting...");
-		invited.sendMessage("The game is starting...");
+    private void informUsersPositive() {
+        host.sendMessage(invited.getClient().getRefName() + " has accepted your game invite!");
+        host.sendMessage("The game is starting...");
+        invited.sendMessage("The game is starting...");
 
-		host.sendMessage(StartGame.NAME + ' ' + invited.getClient().getRefName());
-		invited.sendMessage(StartGame.NAME + ' ' + host.getClient().getRefName());
-	}
+        host.sendMessage(StartGame.NAME + ' ' + invited.getClient().getRefName());
+        invited.sendMessage(StartGame.NAME + ' ' + host.getClient().getRefName());
+    }
 
-	private void informUsersNegative() {
-		host.sendMessage(invited.getClient().getRefName() + " has declined your game invite!");
-		endSession();
-	}
+    private void informUsersNegative() {
+        host.sendMessage(invited.getClient().getRefName() + " has declined your game invite!");
+        endSession();
+    }
 
-	public void gameOver() {
-		winner.sendMessage(Win.NAME);
-		loser.sendMessage(Lose.NAME);
+    public void gameOver() {
+        winner.sendMessage(Win.NAME);
+        loser.sendMessage(Lose.NAME);
 
-		winner.getClient().incrementScore();
+        winner.getClient().incrementScore();
 
-		winner.getServer().resetUserList();
+        winner.getServer().resetUserList();
 
-		endSession();
-	}
+        endSession();
+    }
 
-	public void endSession() {
-		host.setSession(null);
-		invited.setSession(null);
-		host.getServer().getGameSessions().remove(this);
-	}
+    public void endSession() {
+        host.setSession(null);
+        invited.setSession(null);
+        host.getServer().getGameSessions().remove(this);
+    }
 
-	public void connectionEnd(ClientHandler connectionEnder) {
-		winner = host;
-		loser = invited;
+    public void connectionEnd(ClientHandler connectionEnder) {
+        winner = host;
+        loser = invited;
 
-		if(connectionEnder == host) {
-			winner = invited;
-			loser = host;
-		}
+        if (connectionEnder == host) {
+            winner = invited;
+            loser = host;
+        }
 
-		gameOver();
-	}
+        gameOver();
+    }
 
-	public void setLoser(ClientHandler loser) {
-		this.loser = loser;
+    public void setLoser(ClientHandler loser) {
+        this.loser = loser;
 
-		if (loser == host) {
-			setWinner(invited);
-			return;
-		}
+        if (loser == host) {
+            setWinner(invited);
+            return;
+        }
 
-		setWinner(host);
-	}
+        setWinner(host);
+    }
 
-	private void setWinner(ClientHandler winner) {
-		this.winner = winner;
-	}
+    private void setWinner(ClientHandler winner) {
+        this.winner = winner;
+    }
 
-	ClientHandler getHost() {
-		return host;
-	}
+    ClientHandler getHost() {
+        return host;
+    }
 
-	ClientHandler getInvited() {
-		return invited;
-	}
+    ClientHandler getInvited() {
+        return invited;
+    }
 }
