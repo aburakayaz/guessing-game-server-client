@@ -1,7 +1,7 @@
 package cs408.Common.Commands;
 
 public interface Command {
-	String getName();
+    String getName();
 
-	void act();
+    void act();
 }
